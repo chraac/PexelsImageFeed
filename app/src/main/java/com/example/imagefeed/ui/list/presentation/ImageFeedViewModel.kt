@@ -67,13 +67,15 @@ class ImageFeedViewModel @Inject constructor(
         fetchingJob = coroutineScope.launch {
             imageFeedCuratedPhotosUseCase.queryPhotos(reloadFirstPage = reloadFirstPage)
                 .also { response ->
-                    when (response) {
-                        is Response.Success -> emitState {
-                            mapCuratedPhotosToImageFeedUiState(response.data)
-                        }
+                    emitState {
+                        when (response) {
+                            is Response.Success -> {
+                                mapCuratedPhotosToImageFeedUiState(response.data)
+                            }
 
-                        is Response.Failure -> emitState {
-                            ImageFeedUiState(isLoading = false)
+                            is Response.Failure -> {
+                                ImageFeedUiState(isLoading = false)
+                            }
                         }
                     }
                 }

@@ -27,7 +27,9 @@ class ImageDetailViewModel @Inject constructor(
             _uiStateFlow.value = imageDetailPhotoUseCase.execute(imageId).let {
                 when (it) {
                     is Response.Success -> mapper(it.data)
-                    is Response.Failure -> throw IllegalStateException(it.error.exception)
+                    is Response.Failure -> ImageDetailPageUiState.Error(
+                        it.error.exception.message ?: "Unknown error occurred"
+                    )
                 }
             }
         }

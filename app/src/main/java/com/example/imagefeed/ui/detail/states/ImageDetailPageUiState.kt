@@ -12,4 +12,8 @@ sealed interface ImageDetailPageUiState {
         val description: String,
         val imageUrl: String,
     ) : ImageDetailPageUiState
+
+    data class Error(
+        val message: String,
+    ) : ImageDetailPageUiState
 }
