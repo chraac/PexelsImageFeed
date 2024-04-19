@@ -116,6 +116,47 @@ class ImageFeedNextPageUseCaseTest {
             }
         }
 
+    @Test
+    fun `given exception when execute then return failure response`() =
+        runTest {
+            // Given
+            val lastPhotos = CuratedPhotos(
+                page = 0,
+                photos = emptyList(),
+            )
+            val exception = RuntimeException()
+            val expectedResponse =
+                Response.Failure<CuratedPhotos, NetworkError>(NetworkError.ConnectionError(exception))
+
+            // When
+            whenever(mockReadLastSucceedPhotosRepository.getLastPhotos()).thenReturn(lastPhotos)
+            whenever(
+                mockCuratedPhotosRepository.execute(
+                    page = 1,
+                    perPage = PER_PAGE,
+                )
+            ).thenReturn(
+                expectedResponse
+            )
+
+            val actualResponse = subject.execute()
+
+            // Then
+            assertEquals(expectedResponse, actualResponse)
+            inOrder(
+                mockReadLastSucceedPhotosRepository,
+                mockCuratedPhotosRepository,
+                mockWriteLastSucceedPhotosRepository
+            ) {
+                verify(mockReadLastSucceedPhotosRepository).getLastPhotos()
+                verify(mockCuratedPhotosRepository).execute(
+                    page = 1,
+                    perPage = PER_PAGE,
+                )
+                verify(mockWriteLastSucceedPhotosRepository, never()).setLastPhotos(any())
+            }
+        }
+
     companion object {
         private const val PER_PAGE = 10
         private val mockSettings = ApplicationSettings(perPage = PER_PAGE)

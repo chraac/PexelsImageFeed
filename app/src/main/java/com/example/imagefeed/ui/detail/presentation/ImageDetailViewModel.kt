@@ -3,7 +3,7 @@ package com.example.imagefeed.ui.detail.presentation
 import androidx.lifecycle.ViewModel
 import com.example.imagefeed.di.modules.CoroutineModule
 import com.example.imagefeed.domain.models.Response
-import com.example.imagefeed.domain.usercase.ImageDetailUseCase
+import com.example.imagefeed.domain.usercase.ImageDetailPhotoUseCase
 import com.example.imagefeed.ui.detail.mapper.MapPhotoToImageDetailPageUiState
 import com.example.imagefeed.ui.detail.states.ImageDetailPageUiState
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +15,7 @@ import javax.inject.Named
 
 class ImageDetailViewModel @Inject constructor(
     @Named(CoroutineModule.IO_SCOPE) private val coroutineScope: CoroutineScope,
-    private val imageDetailUseCase: ImageDetailUseCase,
+    private val imageDetailPhotoUseCase: ImageDetailPhotoUseCase,
     private val mapper: MapPhotoToImageDetailPageUiState,
 ) : ViewModel() {
     private val _uiStateFlow =
@@ -24,7 +24,7 @@ class ImageDetailViewModel @Inject constructor(
 
     fun updateImageId(imageId: Int) {
         coroutineScope.launch {
-            _uiStateFlow.value = imageDetailUseCase.execute(imageId).let {
+            _uiStateFlow.value = imageDetailPhotoUseCase.execute(imageId).let {
                 when (it) {
                     is Response.Success -> mapper(it.data)
                     is Response.Failure -> throw IllegalStateException(it.error.exception)

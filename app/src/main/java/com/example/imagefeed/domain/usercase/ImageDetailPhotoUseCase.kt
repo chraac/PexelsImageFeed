@@ -6,7 +6,7 @@ import com.example.imagefeed.domain.models.Response
 import com.example.imagefeed.domain.repos.ReadLastSucceedPhotosRepository
 import javax.inject.Inject
 
-class ImageDetailUseCase @Inject constructor(
+class ImageDetailPhotoUseCase @Inject constructor(
     private val readLastSucceedPhotosRepository: ReadLastSucceedPhotosRepository,
 ) {
     fun execute(imageId: Int): Response<Photo, NoDataError> {
