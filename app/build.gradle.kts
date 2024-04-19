@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.internal.Kapt3GradleSubplugin.Companion.isKaptKeepKdocCommentsInStubs
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -21,12 +21,32 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val apiKeyName = "PEXELS_API_KEY"
+        val apiKeyValue = if (System.getenv().containsKey(apiKeyName)) {
+            System.getenv(apiKeyName)
+        } else {
+            // Get the API keys from local.properties
+            val properties = Properties()
+            properties.load(project.rootProject.file("local.properties").inputStream())
+            properties.getProperty("pexelsApiKey")
+        }
+
+        // Set API keys in BuildConfig
+        buildConfigField(
+            "String",
+            apiKeyName,
+            "\"$apiKeyValue\"",
+        )
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -38,6 +58,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -51,6 +72,8 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     kapt(libs.ext.dagger.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -65,8 +88,15 @@ dependencies {
     implementation(libs.ext.jackson.core)
     implementation(libs.ext.jackson.annotations)
     implementation(libs.ext.jackson.databind)
+    implementation(libs.ext.jackson.kotlin)
     implementation(libs.ext.retrofit)
+    implementation(libs.ext.landscapist.glide)
+    implementation(libs.ext.landscapist.placeholder)
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.ext.mockito.inline)
+    testImplementation(libs.ext.mockito.kotlin)
+    testImplementation(libs.ext.burst)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

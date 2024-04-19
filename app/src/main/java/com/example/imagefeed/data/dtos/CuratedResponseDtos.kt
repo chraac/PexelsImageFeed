@@ -1,4 +1,4 @@
-package com.example.imagefeed.data
+package com.example.imagefeed.data.dtos
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
@@ -27,7 +27,7 @@ data class PhotoDto(
     @param:JsonProperty("alt") val alt: String,
 )
 
-data class CuratedResponseDto(
+data class CuratedPhotosResponseDto(
     @param:JsonProperty("page") val page: Int,
     @param:JsonProperty("per_page") val perPage: Int,
     @param:JsonProperty("photos") val photos: List<PhotoDto>,
