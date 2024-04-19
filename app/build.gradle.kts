@@ -22,15 +22,21 @@ android {
             useSupportLibrary = true
         }
 
-        // Get the API keys from local.properties
-        val properties = Properties()
-        properties.load(project.rootProject.file("local.properties").inputStream())
+        val apiKeyName = "PEXELS_API_KEY"
+        val apiKeyValue = if (System.getenv().containsKey(apiKeyName)) {
+            System.getenv(apiKeyName)
+        } else {
+            // Get the API keys from local.properties
+            val properties = Properties()
+            properties.load(project.rootProject.file("local.properties").inputStream())
+            properties.getProperty("pexelsApiKey")
+        }
 
         // Set API keys in BuildConfig
         buildConfigField(
             "String",
-            "PEXELS_API_KEY",
-            "\"${properties.getProperty("pexelsApiKey")}\"",
+            apiKeyName,
+            "\"$apiKeyValue\"",
         )
     }
 
