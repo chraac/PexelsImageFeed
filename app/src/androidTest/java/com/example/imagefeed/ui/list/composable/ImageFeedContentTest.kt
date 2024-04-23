@@ -12,7 +12,7 @@ import com.example.imagefeed.ui.list.states.ImageItemUiState
 import org.junit.Rule
 import org.junit.Test
 
-class ImageFeedHostTest {
+class ImageFeedContentTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
