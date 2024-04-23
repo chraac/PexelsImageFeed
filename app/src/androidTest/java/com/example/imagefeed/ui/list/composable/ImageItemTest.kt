@@ -14,6 +14,7 @@ class ImageItemTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
+
     private var clicked = false
 
     @Before
